@@ -1,0 +1,12 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceId":{
+            "value": "/subscriptions/21f9d6d6-887f-4f40-a0c1-81a12af6dbe1/resourceGroups/alerts/providers/Microsoft.Compute/virtualMachines/vm1"
+        },
+        "actionGroupId":{
+            "value": "/subscriptions/21f9d6d6-887f-4f40-a0c1-81a12af6dbe1/resourceGroups/alerts/providers/microsoft.insights/actionGroups/GiveACall"
+        }
+    }
+}
