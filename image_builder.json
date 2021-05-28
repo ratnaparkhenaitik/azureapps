@@ -1,0 +1,77 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "functions": [],
+    "variables": {},
+    "resources": [
+          
+{
+    "type": "Microsoft.VirtualMachineImages/imageTemplates",
+    "name": "Windows10-ImageBuild",
+    "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+            "<imgBuilderId>": {}
+        }
+        
+    },
+    "apiVersion": "2020-02-14",
+    "location": "WestEurope",
+    "dependsOn": [],
+    "tags": {
+        "imagebuilderTemplate": "window10-notepad"
+                },
+    "properties": {
+
+        "buildTimeoutInMinutes" : 100,
+
+        "vmProfile": 
+                {
+                "vmSize": "Standard_D2_v2",
+                "osDiskSizeGB": 127
+                },
+        
+        "source": {
+            "type": "PlatformImage",
+                "publisher": "MicrosoftWindowsDesktop",
+                "offer": "Windows-10",
+                "sku": "20h2-evd",
+                "version": "latest"
+            
+        },
+        "customize": [
+            {
+                "type": "PowerShell",
+                "name": "CreateBuildPath",
+                "runElevated": true,
+                "scriptUri": "https://raw.githubusercontent.com/ratnaparkhenaitik/azureapps/master/AzureWebApp/NotepadPlusInstall.ps1"
+            },
+
+                {
+                    "type": "WindowsUpdate",
+                    "searchCriteria": "IsInstalled=0",
+                    "filters": [
+                        "exclude:$_.Title -like '*Preview*'",
+                        "include:$true"
+                                ],
+                    "updateLimit": 20
+                }
+        ],
+        "distribute": 
+            [
+                {   "type":"ManagedImage",
+                    "imageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/images/<imageName>",
+                    "location": "<region>",
+                    "runOutputName": "<runOutputName>",
+                    "artifactTags": {
+                        "source": "azVmImageBuilder",
+                        "baseosimg": "windows10"
+                    }
+                }
+            ]
+        }
+}
+    ],
+    "outputs": {}
+}
